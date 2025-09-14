@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      margin: 20;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      background: lightpink;
+      width: 400px;
+      height: 600px;
+      border-radius: 0px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .input-box {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+
+    .input-box input {
+      flex: 1;
+      padding: 10px;
+      border: 20;
+      outline: black;
+    }
+
+    .input-box button {
+      background: #007bff;
+      color: white;
+      border: 0;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+
+    .user-message {
+      background: #d1e7dd;
+      align-self: flex-end;
+    }
+
+    .bot-message {
+      background: #f8d7da;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-box" id="chat-box">
+      <div class="bot-message message">Hi! Ask me something about our services.</div>
+    </div>
+    <div class="input-box">
+      <input type="text" id="user-input" placeholder="Type your question..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const faqAnswers = {
+      "hours": "We are open from 9 AM to 8 PM every day.",
+      "canceled": "orders can be canceled within a limited window after placing them.",
+      "exchange": "Yes! We offer returns and exchange within 14-30 days of delivery.",
+      "shipping": "shipping times vary by location and shipping method. standard delivery usually takes 3-7 business days.",
+      "payment": "we accept major credit/debit cards, paypal,Apple pay, Googal pay and more.",
+    };
+
+    function sendMessage() {
+      const inputBox = document.getElementById('user-input');
+      const chatBox = document.getElementById('chat-box');
+      const userMessage = inputBox.value.trim();
+      if (userMessage === "") return;
+
+      // Display user message
+      const userMsgDiv = document.createElement("div");
+      userMsgDiv.className = "message user-message";
+      userMsgDiv.textContent = userMessage;
+      chatBox.appendChild(userMsgDiv);
+
+      // Find matching answer
+      let response = "Sorry, I didn’t understand that. Please ask about hours, canceled, exchange, shipping or payment.";
+      for (let keyword in faqAnswers) {
+        if (userMessage.toLowerCase().includes(keyword)) {
+          response = faqAnswers[keyword];
+          break;
+        }
+      }
+
+      // Display bot response
+      const botMsgDiv = document.createElement("div");
+      botMsgDiv.className = "message bot-message";
+      botMsgDiv.textContent = response;
+      chatBox.appendChild(botMsgDiv);
+
+      inputBox.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Send message on Enter key
+    document.getElementById("user-input").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
